@@ -1,0 +1,32 @@
+services:
+  subscriptions:
+    build: .
+    image: subscription-manager:1.0.0
+    restart: unless-stopped
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-3000}:3000"
+    environment:
+      INIT_ADMIN_USERNAME: ${INIT_ADMIN_USERNAME:-admin}
+      INIT_ADMIN_PASSWORD: ${INIT_ADMIN_PASSWORD:?Set INIT_ADMIN_PASSWORD in .env}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?Set ENCRYPTION_KEY in .env}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+    volumes:
+      - subscriptions-data:/data
+  lan-https:
+    image: caddy:2
+    profiles: ["lan-https"]
+    restart: unless-stopped
+    depends_on:
+      - subscriptions
+    environment:
+      LAN_HOST: ${LAN_HOST:-localhost}
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:3443:3443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - subscriptions-tls:/data
+      - subscriptions-tls-config:/config
+volumes:
+  subscriptions-tls:
+  subscriptions-tls-config:
+  subscriptions-data:

@@ -1,0 +1,21 @@
+node_modules/
+work/
+dist/
+dist-server/
+.env
+playwright-report/
+test-results/
+
+# Local secrets, runtime data, and system files
+.env.*
+!.env.example
+.DS_Store
+*.log
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+data/
+backups/
+*.pem
+*.key

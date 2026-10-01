@@ -1,0 +1,8 @@
+node_modules
+work
+dist
+dist-server
+.env
+.git
+playwright-report
+test-results
